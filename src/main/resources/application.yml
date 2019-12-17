@@ -10,7 +10,7 @@ spring:
       ddl-auto: none #create
     properties:
       hibernate:
-        #        show_sql: true
+        show_sql: true
         format_sql: true
         default_batch_fetch_size: 500 # Lazy 로딩시 in query 최대 개수 (범위 1 ~ 1000)
 

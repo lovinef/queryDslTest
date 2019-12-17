@@ -23,14 +23,17 @@ public class MainRestController {
     }
 
     @GetMapping("/rest/getMembers")
-    public Result getMembers(){
-        List<MemberDto> members = memberRepository.findAll().stream().map(MemberDto::new).collect(Collectors.toList());
-        return new Result(HttpStatus.OK.value(), members);
+    public Result<List<MemberDto>> getMembers(){
+        List<MemberDto> result = memberRepository.findAll()
+                .stream()
+                .map(member -> new MemberDto(member.getId(), member.getName(), member.getAge()))
+                .collect(Collectors.toList());
+        return new Result<>(HttpStatus.OK.value(), result);
     }
 
     @Data
     @AllArgsConstructor
-    private class Result<T> {
+    private static class Result<T> {
         private int status;
         private T data;
     }

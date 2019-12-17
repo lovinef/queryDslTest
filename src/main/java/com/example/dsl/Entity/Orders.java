@@ -10,16 +10,16 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 @SequenceGenerator(
-        name="ORDERS_SEQUENCE_INDEX_GEN",
-        sequenceName = "ORDERS_SEQUENCE_INDEX",
-        initialValue = 1,
-        allocationSize = 1
+    name="ORDERS_SEQUENCE_INDEX_GEN",
+    sequenceName = "ORDERS_SEQUENCE_INDEX",
+    initialValue = 1,
+    allocationSize = 1
 )
 public class Orders {
     @Id
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "ORDERS_SEQUENCE_INDEX_GEN"
+        strategy = GenerationType.SEQUENCE,
+        generator = "ORDERS_SEQUENCE_INDEX_GEN"
     )
     @Column(name = "orders_id")
     private Long id;
