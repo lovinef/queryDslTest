@@ -1,18 +1,21 @@
 package com.example.dsl.repository;
 
 import com.example.dsl.Entity.Member;
+import com.example.dsl.Entity.MemberRole;
 import com.example.dsl.Entity.Orders;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -23,6 +26,9 @@ public class MemberRepositoryTest {
 
     @Autowired
     private OrdersRepository ordersRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Test
     public void test1(){
@@ -72,20 +78,21 @@ public class MemberRepositoryTest {
     @Rollback(false)
     public void makeData(){
         // 테스트 데이터 생성
-        boolean makeData = false;
+        boolean makeData = true;
         if (makeData) {
-            Member member1 = new Member.Builder().name("name1").age(10).build();
-            Member member2 = new Member.Builder().name("name2").age(10).build();
-            Member member3 = new Member.Builder().name("name3").age(10).build();
-            Member member4 = new Member.Builder().name("name4").age(20).build();
-            Member member5 = new Member.Builder().name("name4").age(20).build();
-            Member member6 = new Member.Builder().name("name4").age(20).build();
-            Member member7 = new Member.Builder().name("name4").age(20).build();
-            Member member8 = new Member.Builder().name("name4").age(30).build();
-            Member member9 = new Member.Builder().name("name4").age(30).build();
-            Member member10 = new Member.Builder().name("name4").age(30).build();
-            Member member11 = new Member.Builder().name("name4").age(30).build();
-            Member member12 = new Member.Builder().name("name4").age(30).build();
+            int num = 1;
+
+            Member member1 = getNewMember("name"+num, "name"+num, num*10);  ++num;
+            Member member2 = getNewMember("name"+num, "name"+num, num*10);  ++num;
+            Member member3 = getNewMember("name"+num, "name"+num, num*10);  ++num;
+            Member member4 = getNewMember("name"+num, "name"+num, num*10);  ++num;
+            Member member5 = getNewMember("name"+num, "name"+num, num*10);  ++num;
+            Member member6 = getNewMember("name"+num, "name"+num, num*10);  ++num;
+            Member member7 = getNewMember("name"+num, "name"+num, num*10);  ++num;
+            Member member8 = getNewMember("name"+num, "name"+num, num*10);  ++num;
+            Member member9 = getNewMember("name"+num, "name"+num, num*10);  ++num;
+            Member member10 = getNewMember("name"+num, "name"+num, num*10);  ++num;
+            Member member11 = getNewMember("name"+num, "name"+num, num*10);  ++num;
 
             memberRepository.save(member1);
             memberRepository.save(member2);
@@ -98,18 +105,17 @@ public class MemberRepositoryTest {
             memberRepository.save(member9);
             memberRepository.save(member10);
             memberRepository.save(member11);
-            memberRepository.save(member12);
 
-            Orders order1 = new Orders.Builder().name("order1").cnt(1).orderDate(LocalDateTime.now()).member(member1).build();
-            Orders order2 = new Orders.Builder().name("order2").cnt(2).orderDate(LocalDateTime.now()).member(member1).build();
-            Orders order3 = new Orders.Builder().name("order3").cnt(3).orderDate(LocalDateTime.now()).member(member2).build();
-            Orders order4 = new Orders.Builder().name("order4").cnt(4).orderDate(LocalDateTime.now()).member(member2).build();
-            Orders order5 = new Orders.Builder().name("order5").cnt(5).orderDate(LocalDateTime.now()).member(member2).build();
-            Orders order6 = new Orders.Builder().name("order6").cnt(6).orderDate(LocalDateTime.now()).member(member3).build();
-            Orders order7 = new Orders.Builder().name("order7").cnt(7).orderDate(LocalDateTime.now()).member(member3).build();
-            Orders order8 = new Orders.Builder().name("order8").cnt(8).orderDate(LocalDateTime.now()).member(member3).build();
-            Orders order9 = new Orders.Builder().name("order9").cnt(9).orderDate(LocalDateTime.now()).member(member3).build();
-            Orders order10 = new Orders.Builder().name("order10").cnt(10).orderDate(LocalDateTime.now()).member(member4).build();
+            Orders order1 = Orders.builder().name("order1").orderCnt(1).orderDate(LocalDateTime.now()).member(member1).build();
+            Orders order2 = Orders.builder().name("order2").orderCnt(2).orderDate(LocalDateTime.now()).member(member1).build();
+            Orders order3 = Orders.builder().name("order3").orderCnt(3).orderDate(LocalDateTime.now()).member(member2).build();
+            Orders order4 = Orders.builder().name("order4").orderCnt(4).orderDate(LocalDateTime.now()).member(member2).build();
+            Orders order5 = Orders.builder().name("order5").orderCnt(5).orderDate(LocalDateTime.now()).member(member2).build();
+            Orders order6 = Orders.builder().name("order6").orderCnt(6).orderDate(LocalDateTime.now()).member(member3).build();
+            Orders order7 = Orders.builder().name("order7").orderCnt(7).orderDate(LocalDateTime.now()).member(member3).build();
+            Orders order8 = Orders.builder().name("order8").orderCnt(8).orderDate(LocalDateTime.now()).member(member3).build();
+            Orders order9 = Orders.builder().name("order9").orderCnt(9).orderDate(LocalDateTime.now()).member(member3).build();
+            Orders order10 = Orders.builder().name("order10").orderCnt(10).orderDate(LocalDateTime.now()).member(member4).build();
             ordersRepository.save(order1);
             ordersRepository.save(order2);
             ordersRepository.save(order3);
@@ -121,5 +127,12 @@ public class MemberRepositoryTest {
             ordersRepository.save(order9);
             ordersRepository.save(order10);
         }
+    }
+
+    private Member getNewMember(String name, String password, int age) {
+        Set<MemberRole> roles = new HashSet<>();
+        roles.add(MemberRole.ADMIN);
+        roles.add(MemberRole.USER);
+        return Member.builder().name(name).password(passwordEncoder.encode(password)).age(age).roles(roles).build();
     }
 }

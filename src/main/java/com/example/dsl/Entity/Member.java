@@ -1,15 +1,17 @@
 package com.example.dsl.Entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @SequenceGenerator(
     name="MEMBER_SEQUENCE_INDEX_GEN",
     sequenceName = "MEMBER_SEQUENCE_INDEX",
@@ -25,11 +27,17 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(unique = true)
     private String name;
+    private String password;
     private int age;
 
+    @ElementCollection(fetch = FetchType.EAGER) // 권한이므로 즉시 조
+    @Enumerated(EnumType.STRING)
+    private Set<MemberRole> roles;
+
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<Orders> orders = new ArrayList<>();
+    final private List<Orders> orders = new ArrayList<>();
 
     // setter
     public Member changeName(String name){
@@ -39,30 +47,5 @@ public class Member {
     public Member changeAge(int age){
         this.age = age;
         return this;
-    }
-
-    // 빌더
-    protected Member(Builder builder) {
-        this.name = builder.name;
-        this.age = builder.age;
-    }
-
-    public static class Builder{
-        private String name = "";
-        private int age = 0;
-
-        public Builder name(String name){
-            this.name = name;
-            return this;
-        }
-
-        public Builder age(int age){
-            this.age = age;
-            return this;
-        }
-
-        public Member build(){
-            return new Member(this);
-        }
     }
 }

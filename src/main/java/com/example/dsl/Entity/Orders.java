@@ -1,14 +1,15 @@
 package com.example.dsl.Entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @SequenceGenerator(
     name="ORDERS_SEQUENCE_INDEX_GEN",
     sequenceName = "ORDERS_SEQUENCE_INDEX",
@@ -51,44 +52,5 @@ public class Orders {
     public void setMember(Member member){
         this.member = member;
         member.getOrders().add(this);
-    }
-
-    // 빌더
-    protected Orders(Builder builder) {
-        this.name = builder.name;
-        this.orderCnt = builder.orderCnt;
-        this.orderDate = builder.orderDate;
-        this.member = builder.member;
-    }
-
-    public static class Builder{
-        private String name = "";
-        private int orderCnt = 0;
-        private LocalDateTime orderDate = LocalDateTime.now();
-        private Member member;
-
-        public Builder name(String name){
-            this.name = name;
-            return this;
-        }
-
-        public Builder cnt(int orderCnt){
-            this.orderCnt = orderCnt;
-            return this;
-        }
-
-        public Builder orderDate(LocalDateTime orderDate){
-            this.orderDate = orderDate;
-            return this;
-        }
-
-        public Builder member(Member member){
-            this.member = member;
-            return this;
-        }
-
-        public Orders build(){
-            return new Orders(this);
-        }
     }
 }
