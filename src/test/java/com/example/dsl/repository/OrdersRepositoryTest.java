@@ -22,6 +22,11 @@ public class OrdersRepositoryTest {
     private OrdersRepository ordersRepository;
 
     @Test
+    public void findTest(){
+        ordersRepository.findByMember_Id(13L);
+    }
+
+    @Test
     public void OrderDateToCharDto(){
         ordersRepository.orderDateToCharDto();
     }
