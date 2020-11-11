@@ -46,22 +46,30 @@ dependencies {
     testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.2.1.RELEASE'
 }
 //querydsl 추가
-def querydslDir = 'src/main/generated'
+def queryDslSrcDir = "$buildDir/generated"
 querydsl {
-    library = "com.querydsl:querydsl-apt"
+    library = 'com.querydsl:querydsl-apt'
     jpa = true
-    querydslSourcesDir = querydslDir
+    querydslSourcesDir = queryDslSrcDir
 }
 sourceSets {
     main {
         java {
-            srcDirs = ['src/main/java', querydslDir]
+            srcDirs = ['src/main/java', queryDslSrcDir]
         }
     }
 }
+
+task deleteGeneratedSources(type: Delete) {
+    delete file(queryDslSrcDir)
+}
+
+tasks.withType(JavaCompile) { it.dependsOn('deleteGeneratedSources') }
+
 compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
 }
+
 configurations {
     querydsl.extendsFrom compileClasspath
 }

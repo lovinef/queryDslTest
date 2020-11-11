@@ -31,4 +31,4 @@ logging:
 
 app-config:
   client-id: dslTestApp
-  client-secret: passSecret
+  client-secret: passSecrets
