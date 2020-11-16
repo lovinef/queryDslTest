@@ -1,12 +1,13 @@
-package com.example.dsl.config;
+package com.example.dsl.config.security;
 
-import com.example.dsl.Entity.Member;
-import com.example.dsl.Entity.MemberRole;
+import com.example.dsl.entity.Member;
+import com.example.dsl.entity.MemberRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,9 +32,9 @@ public class MemberAdaptor extends User {
         super(username, password, authorities);
     }
 
-    private static Collection<? extends GrantedAuthority> authorities(Set<MemberRole> roles) {
+    private static Collection<? extends GrantedAuthority> authorities(List<MemberRole> roles) {
         return roles.stream()
-                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.name()))
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getRoles()))
                 .collect(Collectors.toSet());
     }
 }

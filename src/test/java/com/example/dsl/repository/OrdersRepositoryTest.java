@@ -1,8 +1,6 @@
 package com.example.dsl.repository;
 
 
-import com.example.dsl.Entity.QOrders;
-import com.example.dsl.Entity.QMember;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +9,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
 
-import static com.example.dsl.Entity.QMember.*;
-import static com.example.dsl.Entity.QOrders.orders;
+import static com.example.dsl.entity.QMember.*;
+import static com.example.dsl.entity.QOrders.orders;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

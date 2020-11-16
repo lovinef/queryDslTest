@@ -1,6 +1,6 @@
 package com.example.dsl.repository;
 
-import com.example.dsl.Entity.Member;
+import com.example.dsl.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

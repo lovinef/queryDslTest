@@ -16,7 +16,7 @@ spring:
         default_batch_fetch_size: 500 # Lazy 로딩시 in query 최대 개수 (범위 1 ~ 1000)
   thymeleaf:
     cache: false
-    mode: HTML5
+    mode: HTML
     suffix: .html
     prefix: classpath:templates/
 

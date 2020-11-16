@@ -1,6 +1,6 @@
 package com.example.dsl.repository;
 
-import com.example.dsl.Entity.Member;
+import com.example.dsl.entity.Member;
 import com.example.dsl.dto.MemberDto;
 import com.example.dsl.dto.MemberOrderCntDto;
 import com.example.dsl.dto.MemberOrderJoinDto;

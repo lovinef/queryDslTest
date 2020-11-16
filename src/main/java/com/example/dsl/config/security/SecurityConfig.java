@@ -1,9 +1,9 @@
-package com.example.dsl.config;
+package com.example.dsl.config.security;
 
+import com.example.dsl.config.handler.LoginFailureHandler;
+import com.example.dsl.config.handler.LoginSuccessHandler;
 import com.example.dsl.service.MemberService;
-import com.querydsl.core.annotations.Config;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,12 +18,12 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    MemberService memberService;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final MemberService memberService;
+    private final PasswordEncoder passwordEncoder;
+    private final LoginFailureHandler loginFailureHandler;
+    private final LoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public TokenStore tokenStore(){
@@ -51,23 +51,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
         http.csrf().disable()
                 .authorizeRequests()
+                // 미인증 접근 허용
                 .antMatchers("/login").anonymous()
-                .antMatchers("/main/**").permitAll()
+                // 인증 접근 허용
+                .antMatchers("/main/**").authenticated()
+                .antMatchers("/user/**").hasAnyRole("USER")
+                .antMatchers("/admin/**").hasAnyRole("ADMIN")
+                .antMatchers("/rest/**").authenticated()
                     .and()
+                // 로그인 설정
                 .formLogin()
-                .loginPage("/login").permitAll()
+                .loginPage("/login").permitAll()    // permitAll 모든 사용자 접근 가능
                 .loginProcessingUrl("/loginProcess")
                     .usernameParameter("username")
                     .passwordParameter("password")
                     .permitAll()
-                .failureForwardUrl("/login")
+                .successHandler(loginSuccessHandler)
+                .failureHandler(loginFailureHandler)
+//                .failureForwardUrl("/login")
                     .and()
                 .logout()
                     .logoutUrl("/logout")
                     .invalidateHttpSession(true)
         ;
     }
-
-
 }
 

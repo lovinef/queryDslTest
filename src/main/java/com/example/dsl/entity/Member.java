@@ -1,8 +1,14 @@
-package com.example.dsl.Entity;
+package com.example.dsl.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,15 +35,25 @@ public class Member {
 
     @Column(unique = true)
     private String name;
+
     private String password;
+
     private int age;
 
-    @ElementCollection(fetch = FetchType.EAGER) // 권한이므로 즉시 조
+    @Column(name = "ins_date")
+    @CreationTimestamp
+    private LocalDateTime insDate;
+
+    @Column(name = "upt_date")
+    @UpdateTimestamp
+    private LocalDateTime uptDate;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<MemberRole> roles;
+    private List<MemberRole> roles;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    final private List<Orders> orders = new ArrayList<>();
+    private List<Orders> orders;
 
     // setter
     public Member changeName(String name){

@@ -1,6 +1,5 @@
-package com.example.dsl.config;
+package com.example.dsl.config.db;
 
-import com.sun.xml.bind.api.impl.NameConverter;
 import org.hibernate.dialect.H2Dialect;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 import org.hibernate.type.StandardBasicTypes;

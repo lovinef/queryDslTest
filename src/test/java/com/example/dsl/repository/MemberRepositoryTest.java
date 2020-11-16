@@ -1,8 +1,10 @@
 package com.example.dsl.repository;
 
-import com.example.dsl.Entity.Member;
-import com.example.dsl.Entity.MemberRole;
-import com.example.dsl.Entity.Orders;
+import com.example.dsl.entity.Member;
+import com.example.dsl.entity.MemberRole;
+import com.example.dsl.dto.OrdersDto;
+import com.example.dsl.enums.MemberRoleEnum;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,7 +24,7 @@ public class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private OrdersRepository ordersRepository;
+    private MemberRoleRepository memberRoleRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -54,10 +53,7 @@ public class MemberRepositoryTest {
     @Test
     @Rollback(false)
     public void where_sub_query_update_test(){
-        memberRepository.findMemberByCase()
-                .forEach(m -> {
-                    System.out.println(m.toString());
-                });
+        memberRepository.findMemberByCase().forEach(m -> System.out.println(m.toString()));
     }
 
     @Test
@@ -74,65 +70,67 @@ public class MemberRepositoryTest {
     }
 
     @Test
-//    @Before
+    public void findOrdersCntGt0(){
+        for (OrdersDto ordersDto : memberRepository.findOrdersCntGt0()) {
+            System.out.println(ordersDto.toString());
+        }
+    }
+
+    @Test
+    @Rollback(false)
+    public void testInsertSelect(){
+        Member member = makeUserMember("test5", "test5", 10);
+        memberRepository.save(member);  //  insert
+//        memberRepository.flush();
+        memberRepository.deleteById(8L);
+        memberRepository.findById(8L).ifPresent(m -> m.changeAge(50));  // update
+    }
+
+    @Test
+    public void getMemberInfo(){
+        memberRepository.findAll()
+                .forEach(member -> {
+                    for (MemberRole role : member.getRoles()) {
+                        System.out.println(member.getName() + " : " + role.getRoles().getName());
+                    }
+                });
+    }
+
+    @Test
+    public void findMemberByName(){
+        Member user = memberRepository.findMemberByName("user").get();
+        Assert.assertEquals(user.getRoles().stream().filter(u -> u.getRoles().equals(MemberRoleEnum.USER)).count(), 1);
+    }
+
+    @Test
     @Rollback(false)
     public void makeData(){
         // 테스트 데이터 생성
         boolean makeData = true;
         if (makeData) {
-            int num = 1;
-
-            Member member1 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-            Member member2 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-            Member member3 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-            Member member4 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-            Member member5 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-            Member member6 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-            Member member7 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-            Member member8 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-            Member member9 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-            Member member10 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-            Member member11 = getNewMember("name"+num, "name"+num, num*10);  ++num;
-
-            memberRepository.save(member1);
-            memberRepository.save(member2);
-            memberRepository.save(member3);
-            memberRepository.save(member4);
-            memberRepository.save(member5);
-            memberRepository.save(member6);
-            memberRepository.save(member7);
-            memberRepository.save(member8);
-            memberRepository.save(member9);
-            memberRepository.save(member10);
-            memberRepository.save(member11);
-
-            Orders order1 = Orders.builder().name("order1").orderCnt(1).orderDate(LocalDateTime.now()).member(member1).build();
-            Orders order2 = Orders.builder().name("order2").orderCnt(2).orderDate(LocalDateTime.now()).member(member1).build();
-            Orders order3 = Orders.builder().name("order3").orderCnt(3).orderDate(LocalDateTime.now()).member(member2).build();
-            Orders order4 = Orders.builder().name("order4").orderCnt(4).orderDate(LocalDateTime.now()).member(member2).build();
-            Orders order5 = Orders.builder().name("order5").orderCnt(5).orderDate(LocalDateTime.now()).member(member2).build();
-            Orders order6 = Orders.builder().name("order6").orderCnt(6).orderDate(LocalDateTime.now()).member(member3).build();
-            Orders order7 = Orders.builder().name("order7").orderCnt(7).orderDate(LocalDateTime.now()).member(member3).build();
-            Orders order8 = Orders.builder().name("order8").orderCnt(8).orderDate(LocalDateTime.now()).member(member3).build();
-            Orders order9 = Orders.builder().name("order9").orderCnt(9).orderDate(LocalDateTime.now()).member(member3).build();
-            Orders order10 = Orders.builder().name("order10").orderCnt(10).orderDate(LocalDateTime.now()).member(member4).build();
-            ordersRepository.save(order1);
-            ordersRepository.save(order2);
-            ordersRepository.save(order3);
-            ordersRepository.save(order4);
-            ordersRepository.save(order5);
-            ordersRepository.save(order6);
-            ordersRepository.save(order7);
-            ordersRepository.save(order8);
-            ordersRepository.save(order9);
-            ordersRepository.save(order10);
+            makeUserMember("user", "user", 10);
+            makeAdminMember("admin", "admin", 20);
         }
     }
 
-    private Member getNewMember(String name, String password, int age) {
-        Set<MemberRole> roles = new HashSet<>();
-        roles.add(MemberRole.ADMIN);
-        roles.add(MemberRole.USER);
-        return Member.builder().name(name).password(passwordEncoder.encode(password)).age(age).roles(roles).build();
+    private Member makeUserMember(String name, String password, int age) {
+        Member member = Member.builder().name(name).password(passwordEncoder.encode(password)).age(age).build();
+        memberRepository.save(member);
+
+        MemberRole memberRole = MemberRole.builder().member(member).roles(MemberRoleEnum.USER).build();
+        memberRoleRepository.save(memberRole);
+
+        return member;
+
+    }
+
+    private Member makeAdminMember(String name, String password, int age) {
+        Member member = Member.builder().name(name).password(passwordEncoder.encode(password)).age(age).build();
+        memberRepository.save(member);
+
+        MemberRole memberRole = MemberRole.builder().member(member).roles(MemberRoleEnum.ADMIN).build();
+        memberRoleRepository.save(memberRole);
+
+        return member;
     }
 }

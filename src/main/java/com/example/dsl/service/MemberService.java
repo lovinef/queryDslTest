@@ -1,26 +1,24 @@
 package com.example.dsl.service;
 
-import com.example.dsl.Entity.Member;
-import com.example.dsl.config.MemberAdaptor;
+import com.example.dsl.entity.Member;
+import com.example.dsl.config.security.MemberAdaptor;
 import com.example.dsl.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class MemberService implements UserDetailsService {
-    @Autowired
-    MemberRepository memberRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member findMember = memberRepository.findMemberByName(username).orElseThrow(() -> new UsernameNotFoundException(username));
+        Member findMember = memberRepository.findMemberByName(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
         return new MemberAdaptor(findMember);
     }
 }

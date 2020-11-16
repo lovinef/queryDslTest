@@ -1,6 +1,6 @@
 package com.example.dsl.repository;
 
-import com.example.dsl.Entity.Member;
+import com.example.dsl.entity.Member;
 import com.example.dsl.dto.MemberDto;
 import com.example.dsl.dto.MemberOrderCntDto;
 import com.example.dsl.dto.MemberOrderJoinDto;
@@ -16,8 +16,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-import static com.example.dsl.Entity.QMember.member;
-import static com.example.dsl.Entity.QOrders.orders;
+import static com.example.dsl.entity.QMember.member;
+import static com.example.dsl.entity.QOrders.orders;
 
 @RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberRepositoryCustom{
@@ -52,7 +52,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
         return jpaQueryFactory
                 .select(
                         Projections.fields(
-                                MemberOrderCntDto.class, member.name
+                                MemberOrderCntDto.class
+                                , member.name
                                 , ExpressionUtils.as(
                                         JPAExpressions
                                         .select(orders.count())

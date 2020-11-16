@@ -1,7 +1,8 @@
-package com.example.dsl.config;
+package com.example.dsl.config.security;
 
-import com.example.dsl.service.MemberService;
 import com.example.dsl.common.AppProperties;
+import com.example.dsl.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,23 +14,15 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
-    MemberService memberService;
-
-    @Autowired
-    TokenStore tokenStore;
-
-    @Autowired
-    AppProperties appProperties;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final MemberService memberService;
+    private final TokenStore tokenStore;
+    private final AppProperties appProperties;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {

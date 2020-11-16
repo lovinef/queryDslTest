@@ -1,32 +1,19 @@
 package com.example.dsl.repository;
 
-import com.example.dsl.Entity.Orders;
-import com.example.dsl.Entity.QMember;
-import com.example.dsl.Entity.QOrders;
 import com.example.dsl.dto.OrdersNewDto;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.SimpleTemplate;
-import com.querydsl.core.types.dsl.StringExpression;
-import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.dialect.function.SQLFunctionTemplate;
-import org.hibernate.dialect.function.StandardSQLFunction;
-import org.hibernate.type.StandardBasicTypes;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.query.JpaQueryCreator;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.dsl.Entity.QMember.member;
-import static com.example.dsl.Entity.QOrders.orders;
+import static com.example.dsl.entity.QMember.member;
+import static com.example.dsl.entity.QOrders.orders;
 
 @RequiredArgsConstructor
 public class OrdersRepositoryImpl implements OrdersRepositoryCustom {

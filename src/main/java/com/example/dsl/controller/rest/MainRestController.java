@@ -1,12 +1,12 @@
-package com.example.dsl.rest.controller;
+package com.example.dsl.controller.rest;
 
 import com.example.dsl.dto.MemberDto;
 import com.example.dsl.dto.OrdersDto;
-import com.example.dsl.repository.MemberRepository;
-import com.example.dsl.repository.OrdersRepository;
+import com.example.dsl.service.rest.MemberRestService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class MainRestController {
-    private final MemberRepository memberRepository;
-    private final OrdersRepository ordersRepository;
+    private final MemberRestService memberRestService;
 
     @GetMapping("/rest/main")
     public String restMain(){
@@ -30,23 +29,19 @@ public class MainRestController {
 
     @GetMapping("/rest/getMembers")
     public Result<List<MemberDto>> getMembers(){
-        List<MemberDto> result = memberRepository.findAll()
-                .stream()
-                .map(member -> new MemberDto(member.getId(), member.getName(), member.getAge()))
-                .collect(Collectors.toList());
+        List<MemberDto> result = memberRestService.getAllMembers();
         return new Result<>(HttpStatus.OK.value(), result);
     }
 
     @GetMapping("/rest/list/orders/{id}")
-    public List<OrdersDto> listOrders(@PathVariable(value = "id", required = true) Long id,
+    public Result<List<OrdersDto>> listOrders(@PathVariable(value = "id", required = true) Long id,
                                       @RequestParam(value = "testdata", required = false) String testdata,
                                     Principal principal){
-        System.out.println("id is : " + id);
-        System.out.println("testdata is : " + testdata);
-        return ordersRepository.findByMember_Id(id)
-                .stream()
-                .map(orders -> new OrdersDto(orders.getId(), orders.getName(), orders.getOrderCnt(), orders.getOrderDate()))
-                .collect(Collectors.toList());
+
+        log.info("id is : {}", id);
+
+        List<OrdersDto> listOrders = memberRestService.getListOrders(id);
+        return new Result<>(HttpStatus.OK.value(), listOrders);
     }
 
     @Data
