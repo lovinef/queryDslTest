@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -46,15 +46,17 @@
                 if(ordersDto.length == null || ordersDto.length == 0){
                     innerHtml = 'has no orders';
                 }else{
+                    innerHtml += '<hr/>';
+                    innerHtml += '<table>';
                     for (var i = 0; i < ordersDto.length; i++) {
                         innerHtml +=
                             "<tr>" +
                             "<td>" + ordersDto[i].id + "</td>" +
                             "<td>" + ordersDto[i].name + "</td>" +
-                            "<td>" + ordersDto[i].orderCnt + "</td>" +
-                            "<td>" + ordersDto[i].orderDate + "</td>" +
                             "</tr>";
                     }
+                    innerHtml += '</table>';
+                    innerHtml += '<hr/>'
                 }
 
                 $("#members").html(innerHtml);
@@ -64,9 +66,15 @@
 </head>
 <body>
     <h1>this is admin page</h1>
-    <a onclick="getMemberList()">getMembers</a><br/>
+    <div sec:authorize="isAuthenticated()" class="alert alert-primary" role="alert">
+        Name: <span sec:authentication="name">SomeName</span><br />
+<!--        Principal: <span sec:authentication="principal">PrincipalString</span><br />-->
+        HasRole(USER): <span sec:authorize="hasRole('ROLE_USER')">YES</span><br />
+        HasRole(ADMIN): <span sec:authorize="hasRole('ROLE_ADMIN')">YES</span>
+    </div>
     <hr/>
-    <table id="members"></table>
-    <a href="/logout" title="logout">logout</a>
+    <button class="btn btn-primary" onclick="getMemberList()">getMembers</button><br/>
+    <div id="members"></div>
+    <button type="button" class="btn btn-secondary" onclick="window.location.href='/logout'" title="logout">logout</button>
 </body>
 </html>
