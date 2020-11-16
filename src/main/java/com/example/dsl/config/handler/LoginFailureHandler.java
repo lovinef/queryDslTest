@@ -18,9 +18,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 @Slf4j
-@Setter
-@Getter
-@RequiredArgsConstructor
 @Configuration
 public class LoginFailureHandler implements AuthenticationFailureHandler {
     @Override

@@ -17,7 +17,6 @@ import java.util.List;
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
         if(authentication.isAuthenticated() && authentication.getPrincipal() instanceof MemberAdaptor){
             MemberAdaptor principal = (MemberAdaptor) authentication.getPrincipal();
             List<MemberRole> roles = principal.getMember().getRoles();
