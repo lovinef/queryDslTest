@@ -4,6 +4,7 @@ import com.example.dsl.entity.Member;
 import com.example.dsl.config.security.MemberAdaptor;
 import com.example.dsl.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

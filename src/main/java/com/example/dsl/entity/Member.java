@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.Set;
     initialValue = 1,
     allocationSize = 1
 )
-public class Member {
+public class Member implements Serializable {
     @Id
     @GeneratedValue(
         strategy = GenerationType.SEQUENCE,

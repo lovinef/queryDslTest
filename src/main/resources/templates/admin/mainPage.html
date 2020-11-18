@@ -22,44 +22,38 @@
             }).done(function(data){
                 var innerHtml = "";
                 var memberDto = data.result;
+                innerHtml += '<table>';
                 for (var i = 0; i < memberDto.length; i++) {
                     innerHtml +=
                         "<tr>" +
                         "<td>" + memberDto[i].name + "</td>" +
-                        "<td>" + memberDto[i].age + "</td>" +
+                        "<td><input type='text' name='age' value='" + memberDto[i].age + "'></td>" +
+                        "<td><button type=\"button\" class=\"btn btn-secondary\" title=\"logout\" onclick='updateAge(this, " + memberDto[i].id + ")'>change Age</button></td>" +
                         "</tr>";
                 }
+                innerHtml += '</table>';
                 $("#members").html(innerHtml);
             });
         }
 
-        function getMyOrders(){
+        function updateAge(el, id){
+            var age = $(el).parent().parent().find('input[name="age"]').val();
+
             $.ajax({
-                url : "/rest/list/orders/" + 13
-                ,data:{
-                    "testData" : "testdata is is"
+                method : "POST",
+                url : "/admin/updateAge",
+                data : {
+                    'id' : id,
+                    'age' : age
                 }
             }).done(function(data){
-                var innerHtml = "";
-                var ordersDto = data;
-
-                if(ordersDto.length == null || ordersDto.length == 0){
-                    innerHtml = 'has no orders';
+                if(data.status == 200){
+                    $("#alertModal").find('.modal-body').html('수정 성공');
+                    $("#alertModal").modal('show');
+                    getMemberList();
                 }else{
-                    innerHtml += '<hr/>';
-                    innerHtml += '<table>';
-                    for (var i = 0; i < ordersDto.length; i++) {
-                        innerHtml +=
-                            "<tr>" +
-                            "<td>" + ordersDto[i].id + "</td>" +
-                            "<td>" + ordersDto[i].name + "</td>" +
-                            "</tr>";
-                    }
-                    innerHtml += '</table>';
-                    innerHtml += '<hr/>'
+                    alert('수정 실패');
                 }
-
-                $("#members").html(innerHtml);
             });
         }
     </script>
@@ -76,5 +70,23 @@
     <button class="btn btn-primary" onclick="getMemberList()">getMembers</button><br/>
     <div id="members"></div>
     <button type="button" class="btn btn-secondary" onclick="window.location.href='/logout'" title="logout">logout</button>
+
+    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

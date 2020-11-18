@@ -19,6 +19,9 @@ spring:
     mode: HTML
     suffix: .html
     prefix: classpath:templates/
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
 logging:
   level:
@@ -26,8 +29,6 @@ logging:
       springframework.web: debug
     org.hibernate.SQL: debug
     org.hibernate.type: trace
-
-
 
 app-config:
   client-id: dslTestApp

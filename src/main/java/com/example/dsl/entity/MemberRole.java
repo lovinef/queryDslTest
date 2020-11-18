@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Getter
@@ -19,7 +20,7 @@ import javax.persistence.*;
         initialValue = 1,
         allocationSize = 1
 )
-public class MemberRole {
+public class MemberRole implements Serializable {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
