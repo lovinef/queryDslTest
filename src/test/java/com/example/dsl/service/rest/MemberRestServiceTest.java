@@ -51,6 +51,7 @@ public class MemberRestServiceTest {
         Cache.ValueWrapper valueWrapper = cache.get("MemberRestService.getAllMembers()");
         if(valueWrapper == null)   throw new NullPointerException("cache value is null");
 
+        @SuppressWarnings("unchecked")
         List<MemberDto> memberDtoList = (List<MemberDto>) valueWrapper.get();
         System.out.println("----------");
         memberDtoList.forEach(memberDto -> System.out.println(memberDto.toString()));

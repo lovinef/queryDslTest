@@ -20,7 +20,7 @@ import java.io.Serializable;
         initialValue = 1,
         allocationSize = 1
 )
-public class MemberRole implements Serializable {
+public class MemberRole{
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,

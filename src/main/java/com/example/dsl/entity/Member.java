@@ -25,7 +25,7 @@ import java.util.Set;
     initialValue = 1,
     allocationSize = 1
 )
-public class Member implements Serializable {
+public class Member{
     @Id
     @GeneratedValue(
         strategy = GenerationType.SEQUENCE,
