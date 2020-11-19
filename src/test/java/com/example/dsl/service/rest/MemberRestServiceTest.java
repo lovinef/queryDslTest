@@ -40,7 +40,6 @@ public class MemberRestServiceTest {
         }
     }
 
-
     // CacheManager를 사용하여 직접 캐시를 조회한다.
     @Test
     public void controllCache(){

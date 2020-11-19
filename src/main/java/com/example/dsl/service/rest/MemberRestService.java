@@ -21,7 +21,7 @@ public class MemberRestService {
     private final OrdersRepository ordersRepository;
     private final ModelMapper modelMapper;
 
-    @Cacheable(value = "ttl5minute")
+    @Cacheable(value = "article")
     public List<MemberDto> getAllMembers(){
         return memberRepository.findAll()
                 .stream()
@@ -30,7 +30,7 @@ public class MemberRestService {
     }
 
     // ttl5minute 형태를 가진 모든 키를 제거
-    @CacheEvict(cacheNames = "ttl5minute", allEntries = true)
+    @CacheEvict(cacheNames = {"article"}, allEntries = true)
     @Transactional
     public void updateMember(Long id, int age){
         memberRepository.findById(id).ifPresent(member -> member.changeAge(age));

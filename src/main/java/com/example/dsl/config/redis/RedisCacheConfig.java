@@ -61,6 +61,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
         cacheConfigurations.put("ttl1minute", configuration.entryTtl(Duration.ofMinutes(1L)));
         cacheConfigurations.put("ttl5minute", configuration.entryTtl(Duration.ofMinutes(5L)));
         cacheConfigurations.put("ttl10minute", configuration.entryTtl(Duration.ofMinutes(10L)));
+        cacheConfigurations.put("article", configuration.entryTtl(Duration.ofMinutes(10L)));
 
         return builder.cacheDefaults(configuration).withInitialCacheConfigurations(cacheConfigurations).build();
     }

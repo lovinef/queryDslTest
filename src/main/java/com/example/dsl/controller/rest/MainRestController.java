@@ -27,7 +27,7 @@ public class MainRestController {
         return "this is rest main";
     }
 
-    @GetMapping("/rest/getMembers")
+    @GetMapping(value = "/rest/getMembers")
     public Result<List<MemberDto>> getMembers(){
         List<MemberDto> result = memberRestService.getAllMembers();
         return new Result<>(HttpStatus.OK.value(), result);
